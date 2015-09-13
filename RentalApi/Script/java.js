@@ -1,4 +1,4 @@
-//Load Flicker Api WIth Specify Keyword And Tag
+// Load Flicker Api WIth Specify Keyword And Tag
 function loadlocalhostFlickrAPIScript(){
   keyword = "";
   tags = "House,Rent,Brisbane";
@@ -6,22 +6,22 @@ function loadlocalhostFlickrAPIScript(){
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        flicktest = JSON.parse(xmlhttp.responseText)
-        loadflickrcallback(flicktest);
+      flicktest = JSON.parse(xmlhttp.responseText)
+      loadflickrcallback(flicktest);
     }
   }
   xmlhttp.open("GET", url, true);
   xmlhttp.send();
 }
-//Load Flicker Api WIth Passing Keyword And Tag Parameter
+// Load Flicker Api WIth Passing Keyword And Tag Parameter
 function loadflickrapifloorplan(keyword , tags) {
   parameterflicker =  tags + ',,' + keyword;
   url = "/Flickr/" + parameterflicker;
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        flickrfloorplan = JSON.parse(xmlhttp.responseText)
-        loadflickrcallback(flickrfloorplan);
+      flickrfloorplan = JSON.parse(xmlhttp.responseText)
+      loadflickrcallback(flickrfloorplan);
     }
   }
   xmlhttp.open("GET", url, true);
@@ -30,6 +30,7 @@ function loadflickrapifloorplan(keyword , tags) {
 
 
 first = 1;
+// Predefine Flickr Call Back Function.
 function loadflickrcallback(rsp) {
   HousesOtherPhotos = "";
   FlickrData = rsp;
@@ -46,15 +47,15 @@ function loadflickrcallback(rsp) {
     
     //Run the house Searcher Function on for 1 times.
     if(first == 1){
-        HousesOtherPhotos= "";
-        geocodeAddress(geocoder, map , specifyPhoto , photo , thumbnail );
+      HousesOtherPhotos = "" ;
+      geocodeAddress(geocoder, map , specifyPhoto , photo , thumbnail );
     }
   }
   first = 0;
 }
 
-//@param keyword , latitude, longitude
-//Run Foursquare Function With seraching keyword,lat and lon in that area
+// @param keyword , latitude, longitude
+// Run Foursquare Function With seraching keyword,lat and lon in that area
 function loadFourSquareAPI(keyword , latitude ,longitude ) {
   var xmlhttp = new XMLHttpRequest();
   parameterfoursquare = keyword + "," + latitude + "," + longitude;
@@ -62,23 +63,25 @@ function loadFourSquareAPI(keyword , latitude ,longitude ) {
   testingurl = url;
   xmlhttp.onreadystatechange = function() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        var myArr = JSON.parse(xmlhttp.responseText);
-         getFourSquareRespond(myArr);
-        }
+      var myArr = JSON.parse(xmlhttp.responseText);
+      getFourSquareRespond(myArr);
+    }
   }
+
   xmlhttp.open("GET", url, true);
   xmlhttp.send();
-    function getFourSquareRespond(frsp) {
-      try {
-      FoursquarePlaceId = frsp.response.venues[0].id;
-      loadFourSquareApiByID(FoursquarePlaceId);
-      } catch (error){
-        FoursquarePlaceId = "";
-        }
+
+  function getFourSquareRespond(frsp) {
+    try {
+    FoursquarePlaceId = frsp.response.venues[0].id;
+    loadFourSquareApiByID(FoursquarePlaceId);
+    } catch (error){
+      FoursquarePlaceId = "";
     }
+  }
 }
-//@param id 
-//Search for The Specify Place ID on Foursquare
+// @param id 
+// Search for The Specify Place ID on Foursquare
 var FoursquareIdData;
 function loadFourSquareApiByID(id){
   var xmlhttp = new XMLHttpRequest();
@@ -89,33 +92,34 @@ function loadFourSquareApiByID(id){
         getFourSquareResondID(FoursquareIDParse);
     }
   }
+
   xmlhttp.open("GET", url, true);
   xmlhttp.send();
 
   function getFourSquareResondID(fidrsp) {
+    FourSquarePhotoURL = "";
+    FoursquareIdData = fidrsp;
+    try{
+      FourSquarePhoto = FoursquareIdData.response.venue.bestPhoto.prefix + "400x300" + FoursquareIdData.response.venue.bestPhoto.suffix;
+      FourSquarePhotoURL = '<a href="#"><img alt="' + "" + '" src="' + FourSquarePhoto + '"/></a>';
+      FourSquareURL = '<a href="' + FoursquareIdData.response.venue.canonicalUrl + '">View From Foursquare</a>';
+    } catch (error) {
       FourSquarePhotoURL = "";
-      FoursquareIdData = fidrsp;
+      }
       try{
-        FourSquarePhoto = FoursquareIdData.response.venue.bestPhoto.prefix + "400x300" + FoursquareIdData.response.venue.bestPhoto.suffix;
-        FourSquarePhotoURL = '<a href="#"><img alt="' + "" + '" src="' + FourSquarePhoto + '"/></a>';
-        FourSquareURL = '<a href="' + FoursquareIdData.response.venue.canonicalUrl + '">View From Foursquare</a>';
-      } catch (error) {
-        FourSquarePhotoURL = "";
-        }
-        try{
-        FourSquareHoursIsOpen = FoursquareIdData.response.venue.hours.isOpen;
-        FourSquareHoursIsOpenStatus = FoursquareIdData.response.venue.hours.status;
-      } catch (error){
-        FourSquareHoursIsOpen = "";
-        FourSquareHoursIsOpenStatus = "";
-      }
-      FourSquareCheckInCount = FoursquareIdData.response.venue.stats.checkinsCount;
-      FourSquareRating = FoursquareIdData.response.venue.rating;
-
-      if (!checkdata(FourSquareRating)) {
-        FourSquareRating = "This Place Have No Rating Yet";
-      }
+      FourSquareHoursIsOpen = FoursquareIdData.response.venue.hours.isOpen;
+      FourSquareHoursIsOpenStatus = FoursquareIdData.response.venue.hours.status;
+    } catch (error){
+      FourSquareHoursIsOpen = "";
+      FourSquareHoursIsOpenStatus = "";
     }
+    FourSquareCheckInCount = FoursquareIdData.response.venue.stats.checkinsCount;
+    FourSquareRating = FoursquareIdData.response.venue.rating;
+
+    if (!checkdata(FourSquareRating)) {
+      FourSquareRating = "This Place Have No Rating Yet";
+    }
+  }
 }
 
 
@@ -123,8 +127,7 @@ var FourSquarePhotoURL;
 var NearbySearchInfoWindow;
 var searchnearbylocation = {lat: -27.5927251, lng: 153.06183389999998};
 
-
-//Google Map CallBack Function
+// Google Map CallBack Function
 function initMap() {
    map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: -33.8688, lng: 151.2195},
@@ -134,7 +137,7 @@ function initMap() {
   var infowindow = new google.maps.InfoWindow();
   geocoder = new google.maps.Geocoder();
 
-  //Get CurrentLocation
+  // Get CurrentLocation
    if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
       pos = {
@@ -149,10 +152,10 @@ function initMap() {
       geocodeLatLng(geocoder, map, infowindow)
       map.setCenter(pos);
 
-    }, function() {
-      handleLocationError(true, infoWindow, map.getCenter());
-    });
-  } else {
+    },function() {
+        handleLocationError(true, infoWindow, map.getCenter());
+      });
+    } else {
     handleLocationError(false, infoWindow, map.getCenter());
   }
 
@@ -171,12 +174,12 @@ function initMap() {
   searchBox.addListener('places_changed', function() {
     var places = searchBox.getPlaces();
 
-    if (places.length == 0) {
+    if (places.length == 0){
       return;
     }
 
     // Clear out the old markers.
-    markers.forEach(function(marker) {
+    markers.forEach(function(marker){
       marker.setMap(null);
     });
     markers = [];
@@ -194,14 +197,14 @@ function initMap() {
       };
 
       // Create a marker for each place.
-       Mapmarker = new google.maps.Marker({
+      Mapmarker = new google.maps.Marker({
         map: map,
         icon: icon,
         title: place.name,
         position: place.geometry.location,
         placelat: place.geometry.location.G,
         placelng: place.geometry.location.K
-        });
+      });
 
 
       google.maps.event.addListener(Mapmarker, 'click', function() {
@@ -242,7 +245,7 @@ function initMap() {
   });
 }
 
-//Function For Searching Nearby When Click On the House Marker
+// Function For Searching Nearby When Click On the House Marker
 NearbyPlaceMarkers_array = [];
 function SearchNearByPlace(NearBySearchLocation , NearbySearchType){
   deleteMarkers();
@@ -254,8 +257,8 @@ function SearchNearByPlace(NearBySearchLocation , NearbySearchType){
   }, callback);
 }
 
-//@param Search Result,Status,
-//Return Pass the Search Result And Call Create Marker Function.
+// @param Search Result,Status,
+// Return Pass the Search Result And Call Create Marker Function.
 function callback(results, status) {
   if (status === google.maps.places.PlacesServiceStatus.OK) {
     for (var i = 0; i < results.length; i++) {
@@ -263,8 +266,8 @@ function callback(results, status) {
     }
   }
 }
-//@param place Object
-//Generate Marker For Nearby Places
+// @param place Object
+// Generate Marker For Nearby Places
 function createMarker(place) {
   FoursquareInfoContent = null;
   maptesting = place;
@@ -275,7 +278,7 @@ function createMarker(place) {
       origin: new google.maps.Point(0, 0),
       anchor: new google.maps.Point(17, 34),
       scaledSize: new google.maps.Size(25, 25)
-    };
+  };
   var markerSize = new google.maps.Size(24, 24);
   var NearbyPlacemarker = new google.maps.Marker({
     map: map,
@@ -283,7 +286,7 @@ function createMarker(place) {
     placelat: place.geometry.location.G,
     placelng: place.geometry.location.K,
     icon: image
-    });
+  });
   NearbyPlaceMarkers_array.push(NearbyPlacemarker);
 
   google.maps.event.addListener(NearbyPlacemarker, 'click', function() {
@@ -307,8 +310,7 @@ function createMarker(place) {
           }
         }
       }
-    
-    NearbySearchInfoWindow.setContent( FoursquareInfoContent  );
+    NearbySearchInfoWindow.setContent( FoursquareInfoContent );
     NearbySearchInfoWindow.open(map, this);
   });
 }
@@ -351,9 +353,9 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 }
 
 /**
-*@param Get Currurent Location From Googlemap 
-*Function To Trace Location By Latitude, Longtidute
-*@Reture Place Name
+* @param Get Currurent Location From Googlemap 
+* Function To Trace Location By Latitude, Longtidute
+* @Reture Place Name
 */  
 function geocodeLatLng(geocoder, map, infowindow) {
   input = geolat + "," + geolng;
@@ -385,7 +387,7 @@ function geocodeLatLng(geocoder, map, infowindow) {
   });
 }
 
-//@param flicker with all flicker data
+// @param flicker with all flicker data
 // Function process Flicker Result 
 // Used photo title and search for the House address 
 function geocodeAddress(geocoder, resultsMap , housephoto , dataobject , housephotoThumbnail ) {
@@ -408,7 +410,7 @@ function geocodeAddress(geocoder, resultsMap , housephoto , dataobject , houseph
         icon: image,
         HouseFloorPlanPhotos: ""
       });
-      FlickrMarkerArray.push(PlaceReturnmarker);
+      FlickrMarkerArray.push( PlaceReturnmarker );
       placesList.innerHTML += '<li>' + PlaceReturnmarker.ResultPanelURL 
       + "<br><b>"+ PlaceReturnmarker.HouseAddress 
       + '</li>';
@@ -419,6 +421,8 @@ function geocodeAddress(geocoder, resultsMap , housephoto , dataobject , houseph
 
       PlaceReturnmarker.addListener('click', function() {
         loadflickrapifloorplan( PlaceReturnmarker.MarkerPlaceName , "Brisbane,Rent,House,FloorPlan");
+        map.setCenter( PlaceReturnmarker.position );
+        map.setZoom( 17 );
 
         SearchNearByPlace ( PlaceReturnmarker.position , "bus_station" );
         SearchNearByPlace ( PlaceReturnmarker.position , "train_station" );
@@ -435,22 +439,21 @@ function geocodeAddress(geocoder, resultsMap , housephoto , dataobject , houseph
           + PlaceReturnmarker.HouseDesc;
         PlaceReturnmarker.HouseFloorPlanPhotos = HousesOtherPhotos;
           if (checkdata(PlaceReturnmarker.HouseFloorPlanPhotos)){
-              infocontent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
-              + PlaceReturnmarker.HouseAddress + "<br>" 
-              + PlaceReturnmarker.HouseFloorPlanPhotos + "</b><br>" 
-              + PlaceReturnmarker.HouseDesc ;
+            infocontent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
+            + PlaceReturnmarker.HouseAddress + "<br>" 
+            + PlaceReturnmarker.HouseFloorPlanPhotos + "</b><br>" 
+            + PlaceReturnmarker.HouseDesc ;
           }
         RentPlaceinfowindow.setContent( infocontent );
         RentPlaceinfowindow.open(map, PlaceReturnmarker);
         }, 500 );
-
       });
     } 
   });
 }
 
-//Event Lisener For The Result Plan
-//While Click On the photo On THis To Call This Function
+// Event Lisener For The Result Plan
+// While Click On the photo On THis To Call This Function
 function ResultPanalClick(Resultsindex){
   loadflickrapifloorplan( FlickrMarkerArray[Resultsindex].MarkerPlaceName , "Brisbane,Rent,House,FloorPlan");
   map.setCenter(FlickrMarkerArray[Resultsindex].position);
@@ -483,7 +486,7 @@ function ResultPanalClick(Resultsindex){
 
 }  
 
-//Function Handling Error
+// Function Handling Error
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.setPosition(pos);
   infoWindow.setContent(browserHasGeolocation ?
@@ -491,7 +494,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
                         'Error: Your browser doesn\'t support geolocation.');
 }
 
-//Load The Flickr API When Page Finish load
+// Load The Flickr API When Page Finish load
 $(window).load(function() {
   loadlocalhostFlickrAPIScript();
 });
