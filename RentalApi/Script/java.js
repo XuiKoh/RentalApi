@@ -99,6 +99,7 @@ function loadFourSquareApiByID(id){
   function getFourSquareResondID(fidrsp) {
     FourSquarePhotoURL = "";
     FoursquareIdData = fidrsp;
+    FourSquarePlaceName = FoursquareIdData.response.venue.name;
     try{
       FourSquarePhoto = FoursquareIdData.response.venue.bestPhoto.prefix + "400x300" + FoursquareIdData.response.venue.bestPhoto.suffix;
       FourSquarePhotoURL = '<a href="#"><img alt="' + "" + '" src="' + FourSquarePhoto + '"/></a>';
@@ -119,6 +120,23 @@ function loadFourSquareApiByID(id){
     if (!checkdata(FourSquareRating)) {
       FourSquareRating = "This Place Have No Rating Yet";
     }
+    if (checkdata(FourSquarePhotoURL)){
+    FoursquareInfoContent = FourSquarePhotoURL + "<br><b>" + FourSquarePlaceName + "</b><br>" + FourSquareURL;
+      
+    if(checkdata(FourSquareCheckInCount)){
+      FoursquareInfoContent = FourSquarePhotoURL + "<br><b>" + FourSquarePlaceName + "</b>"
+        + "<br>Check In Counts: " + FourSquareCheckInCount
+        + "<br>Rating: " + FourSquareRating + "<br>" + FourSquareURL;
+
+      if(checkdata(FourSquareHoursIsOpenStatus)){
+        FoursquareInfoContent = FourSquarePhotoURL + "<br><b>" + FourSquarePlaceName + "</b>"
+        + "<br>Status: " + FourSquareHoursIsOpenStatus
+        + "<br>Check In Counts: " + FourSquareCheckInCount
+        + "<br>Rating: " + FourSquareRating + "<br>" + FourSquareURL;
+        }
+      }
+    }
+  NearbySearchInfoWindow.setContent( FoursquareInfoContent );
   }
 }
 
@@ -209,27 +227,9 @@ function initMap() {
 
       google.maps.event.addListener(Mapmarker, 'click', function() {
         FoursquareInfoContent = "<b>" + place.name + "<br>" ;
-
+        NearbySearchInfoWindow.setContent(FoursquareInfoContent);
         loadFourSquareAPI(place.name, Mapmarker.placelat , Mapmarker.placelng);
-
-        if (checkdata(FourSquarePhotoURL)){
-          FoursquareInfoContent = FourSquarePhotoURL + "<br><b>" + place.name + "</b><br>" + FourSquareURL;
-        
-          if(checkdata(FourSquareCheckInCount)){
-            FoursquareInfoContent = FourSquarePhotoURL + "<br><b>" + place.name + "</b>"
-              + "<br>Check In Counts: " + FourSquareCheckInCount
-              + "<br>Rating: " + FourSquareRating + "<br>" + FourSquareURL;
-
-            if(checkdata(FourSquareHoursIsOpenStatus)){
-              FoursquareInfoContent = FourSquarePhotoURL + "<br><b>" + place.name + "</b>"
-              + "<br>Status: " + FourSquareHoursIsOpenStatus
-              + "<br>Check In Counts: " + FourSquareCheckInCount
-              + "<br>Rating: " + FourSquareRating + "<br>" + FourSquareURL;
-            }
-          }
-        }
-      infowindow.setContent(FoursquareInfoContent);
-      infowindow.open(map, this);
+        NearbySearchInfoWindow.open(map, this);
       });
 
       markers.push(Mapmarker);
@@ -291,26 +291,8 @@ function createMarker(place) {
 
   google.maps.event.addListener(NearbyPlacemarker, 'click', function() {
     FoursquareInfoContent = "<b>" + place.name + "<br>" ;
-
-    loadFourSquareAPI(place.name, NearbyPlacemarker.placelat , NearbyPlacemarker.placelng);
-
-    if (checkdata(FourSquarePhotoURL)){
-      FoursquareInfoContent = FourSquarePhotoURL + "<br><b>" + place.name + "</b><br>" + FourSquareURL;
-        
-      if(checkdata(FourSquareCheckInCount)){
-        FoursquareInfoContent = FourSquarePhotoURL + "<br><b>" + place.name + "</b>"
-          + "<br>Check In Counts: " + FourSquareCheckInCount
-          + "<br>Rating: " + FourSquareRating + "<br>" + FourSquareURL;
-
-        if(checkdata(FourSquareHoursIsOpenStatus)){
-          FoursquareInfoContent = FourSquarePhotoURL + "<br><b>" + place.name + "</b>"
-          + "<br>Status: " + FourSquareHoursIsOpenStatus
-          + "<br>Check In Counts: " + FourSquareCheckInCount
-          + "<br>Rating: " + FourSquareRating + "<br>" + FourSquareURL;
-          }
-        }
-      }
     NearbySearchInfoWindow.setContent( FoursquareInfoContent );
+    loadFourSquareAPI(place.name, NearbyPlacemarker.placelat , NearbyPlacemarker.placelng);
     NearbySearchInfoWindow.open(map, this);
   });
 }
