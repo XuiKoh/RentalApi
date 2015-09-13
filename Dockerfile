@@ -6,8 +6,8 @@ RUN apt-get update
 
 RUN apt-get install -y nodejs npm
 
-COPY ./app /app
+COPY ./RentalApi /RentalApi
 
 EXPOSE 80
 
-CMD ["nodejs","app/server.js"]
+CMD ["nodejs","RentalApi/Server.js"]
