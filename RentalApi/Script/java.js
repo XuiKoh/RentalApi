@@ -287,6 +287,7 @@ function createMarker(place) {
     placelng: place.geometry.location.K,
     icon: image
   });
+
   NearbyPlaceMarkers_array.push(NearbyPlacemarker);
 
   google.maps.event.addListener(NearbyPlacemarker, 'click', function() {
@@ -409,18 +410,17 @@ function geocodeAddress(geocoder, resultsMap , housephoto , dataobject , houseph
         SearchNearByPlace ( PlaceReturnmarker.position , "university" );
         SearchNearByPlace ( PlaceReturnmarker.position , "shopping_mall" );
 
-
-      window.setTimeout(function() {
-        infocontent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
-          + PlaceReturnmarker.HouseAddress + "</b><br>" 
-          + PlaceReturnmarker.HouseDesc;
-        PlaceReturnmarker.HouseFloorPlanPhotos = HousesOtherPhotos;
-          if (checkdata(PlaceReturnmarker.HouseFloorPlanPhotos)){
-            infocontent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
-            + PlaceReturnmarker.HouseAddress + "<br>" 
-            + PlaceReturnmarker.HouseFloorPlanPhotos + "</b><br>" 
-            + PlaceReturnmarker.HouseDesc ;
-          }
+        window.setTimeout(function() {
+          infocontent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
+            + PlaceReturnmarker.HouseAddress + "</b><br>" 
+            + PlaceReturnmarker.HouseDesc;
+          PlaceReturnmarker.HouseFloorPlanPhotos = HousesOtherPhotos;
+            if (checkdata(PlaceReturnmarker.HouseFloorPlanPhotos)){
+              infocontent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
+              + PlaceReturnmarker.HouseAddress + "<br>" 
+              + PlaceReturnmarker.HouseFloorPlanPhotos + "</b><br>" 
+              + PlaceReturnmarker.HouseDesc ;
+            }
         RentPlaceinfowindow.setContent( infocontent );
         RentPlaceinfowindow.open(map, PlaceReturnmarker);
         }, 500 );
@@ -452,10 +452,10 @@ function ResultPanalClick(Resultsindex){
     FlickrMarkerArray[Resultsindex].HouseFloorPlanPhotos = HousesOtherPhotos;
     
     if (checkdata(FlickrMarkerArray[Resultsindex].HouseFloorPlanPhotos)){
-        infocontent = FlickrMarkerArray[Resultsindex].HouseMainPhoto + "<br><b>"
-        + FlickrMarkerArray[Resultsindex].HouseAddress + "<br>" 
-        + FlickrMarkerArray[Resultsindex].HouseFloorPlanPhotos + "</b><br>" 
-        + FlickrMarkerArray[Resultsindex].HouseDesc ;
+      infocontent = FlickrMarkerArray[Resultsindex].HouseMainPhoto + "<br><b>"
+      + FlickrMarkerArray[Resultsindex].HouseAddress + "<br>" 
+      + FlickrMarkerArray[Resultsindex].HouseFloorPlanPhotos + "</b><br>" 
+      + FlickrMarkerArray[Resultsindex].HouseDesc ;
     }
     RentPlaceinfowindow.setContent( infocontent );
     RentPlaceinfowindow.open(map, FlickrMarkerArray[Resultsindex]);
