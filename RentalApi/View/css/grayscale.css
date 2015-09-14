@@ -438,15 +438,25 @@ body {
 }
 
 #pac-input {
-  background-color: #fff;
-  font-family: Roboto;
+  background-color: #dbdcff;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 18px;
-  font-weight: 300;
+  margin-top : 0.5% ;
   margin-left: 12px;
   padding: 0 11px 0 13px;
   text-overflow: ellipsis;
   width: 300px;
+
 }
+#pac-input::selection {
+    color: #ea9123;
+    background: #a1ffca;
+}
+#pac-input::-moz-selection {
+    color: #ea9123;
+    background: #a1ffca;
+}
+
 #wrapper {
 	position: relative;
 }
