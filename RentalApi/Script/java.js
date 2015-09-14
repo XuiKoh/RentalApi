@@ -359,13 +359,8 @@ function geocodeLatLng(geocoder, map, infowindow) {
         });
         infowindow.setContent("<b>YOur Location Is<br>" + results[1].formatted_address);
         infowindow.open(map, beachMarker);
-
-      } else {
-        window.alert('No results found');
       }
-    } else {
-      window.alert('Geocoder failed due to: ' + status);
-    }
+    }   
   });
 }
 
