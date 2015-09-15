@@ -57,7 +57,11 @@ function loadflickrcallback(rsp) {
 function LoadFlickFloorPlanCallBack(rsp) {
   HousesOtherPhotos = "";
   FlickrData = rsp;
-  for (i = 0 ; i < rsp.photos.photo.length ; i++) {
+  if (rsp.photos.photo.length > 5)
+    j = 5;
+  else 
+    j = rsp.photos.photo.length;
+  for (i = 0 ; i < j ; i++) {
     photo = rsp.photos.photo[i];
     ptitle = photo.title
     thumbnail = "http://farm" + photo.farm + ".static.flickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret + "_m.jpg";
@@ -69,7 +73,7 @@ function LoadFlickFloorPlanCallBack(rsp) {
     HouseDecp = photo.description._content;
    
   }
-  RentPlaceInfoContent +=  "<br>"+ HousesOtherPhotos ; 
+  RentPlaceInfoContent +=  "<br>" + HousesOtherPhotos ; 
   RentPlaceinfowindow.setContent (RentPlaceInfoContent);
 }
 
@@ -354,11 +358,11 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
                         'Error: Your browser doesn\'t support geolocation.');
 }
 
-/**
-* @param Get Currurent Location From Googlemap 
-* Function To Trace Location By Latitude, Longtidute
-* @Reture Place Name
-*/  
+
+ // @param Get Currurent Location From Googlemap 
+ // Function To Trace Location By Latitude, Longtidute
+ // @Reture Place Name
+  
 function geocodeLatLng(geocoder, map, infowindow) {
   input = geolat + "," + geolng;
   latlngStr = input.split(',', 2);
@@ -429,21 +433,16 @@ function geocodeAddress(geocoder, resultsMap , housephoto , dataobject , houseph
         SearchNearByPlace ( PlaceReturnmarker.position , "university" );
         SearchNearByPlace ( PlaceReturnmarker.position , "shopping_mall" );
 
-        // window.setTimeout(function() {
-          RentPlaceInfoContent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
-            + PlaceReturnmarker.HouseAddress + "</b><br>" 
-            + PlaceReturnmarker.HouseDesc;
-          // PlaceReturnmarker.HouseFloorPlanPhotos = HousesOtherPhotos;
-            // if (checkdata(PlaceReturnmarker.HouseFloorPlanPhotos)){
-            //   RentPlaceInfoContent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
-            //   + PlaceReturnmarker.HouseAddress + "<br>" 
-            //   + PlaceReturnmarker.HouseFloorPlanPhotos + "</b><br>" 
-            //   + PlaceReturnmarker.HouseDesc ;
-            // }
+
+        RentPlaceInfoContent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
+        + PlaceReturnmarker.HouseAddress + "</b><br>" 
+        + PlaceReturnmarker.HouseDesc;
+
         RentPlaceinfowindow.setContent( RentPlaceInfoContent );
+
         loadflickrapifloorplan( PlaceReturnmarker.MarkerPlaceName , "Rent,House,FloorPlan");
         RentPlaceinfowindow.open(map, PlaceReturnmarker);
-        // }, 500 );
+
       });
     } 
   });
@@ -467,7 +466,9 @@ function ResultPanalClick(Resultsindex){
   RentPlaceInfoContent = FlickrMarkerArray[Resultsindex].HouseMainPhoto + "<br><b>"
   + FlickrMarkerArray[Resultsindex].HouseAddress + "</b><br>" 
   + FlickrMarkerArray[Resultsindex].HouseDesc  ;
+  
   RentPlaceinfowindow.setContent( RentPlaceInfoContent );
+
   loadflickrapifloorplan( FlickrMarkerArray[Resultsindex].MarkerPlaceName , "Rent,House,FloorPlan");
   RentPlaceinfowindow.open(map, FlickrMarkerArray[Resultsindex]);
 }  
