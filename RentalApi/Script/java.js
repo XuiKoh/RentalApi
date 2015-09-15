@@ -61,7 +61,7 @@ function LoadFlickFloorPlanCallBack(rsp) {
     j = 5;
   else 
     j = rsp.photos.photo.length;
-  for (i = 0 ; i < j ; i++) {
+  for (i = 0 ; i <= j ; i++) {
     photo = rsp.photos.photo[i];
     ptitle = photo.title
     thumbnail = "http://farm" + photo.farm + ".static.flickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret + "_m.jpg";
