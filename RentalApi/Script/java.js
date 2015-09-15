@@ -21,7 +21,7 @@ function loadflickrapifloorplan(keyword , tags) {
   xmlhttp.onreadystatechange = function() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       flickrfloorplan = JSON.parse(xmlhttp.responseText)
-      loadflickrcallback(flickrfloorplan);
+      LoadFlickFloorPlanCallBack(flickrfloorplan);
     }
   }
   xmlhttp.open("GET", url, true);
@@ -44,7 +44,7 @@ function loadflickrcallback(rsp) {
     specifyPhoto = url ;
     HousesOtherPhotos += url;
     HouseDecp = photo.description._content;
-    
+
     //Run the house Searcher Function on for 1 times.
     if(first == 1){
       HousesOtherPhotos = "" ;
@@ -52,6 +52,25 @@ function loadflickrcallback(rsp) {
     }
   }
   first = 0;
+}
+
+function LoadFlickFloorPlanCallBack(rsp) {
+  HousesOtherPhotos = "";
+  FlickrData = rsp;
+  for (i = 0 ; i < rsp.photos.photo.length ; i++) {
+    photo = rsp.photos.photo[i];
+    ptitle = photo.title
+    thumbnail = "http://farm" + photo.farm + ".static.flickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret + "_m.jpg";
+    picture = "http://www.flickr.com/photos/" + photo.owner + "/" + photo.id;
+    url = '<a href="' + picture + '"><img alt="' + photo.title + '" src="' + thumbnail + '"/></a>';
+    searchingtitle = photo.title;
+    specifyPhoto = url ;
+    HousesOtherPhotos += url;
+    HouseDecp = photo.description._content;
+   
+  }
+  RentPlaceInfoContent +=  "<br>"+ HousesOtherPhotos ; 
+  RentPlaceinfowindow.setContent (RentPlaceInfoContent);
 }
 
 // @param keyword , latitude, longitude
@@ -375,7 +394,7 @@ function geocodeAddress(geocoder, resultsMap , housephoto , dataobject , houseph
   var placesList = document.getElementById('places');
   geocoder.geocode({'address': address}, function(results, status) {
       if (status === google.maps.GeocoderStatus.OK) {
-      var image = '/blue.png';
+      var image = '/house.png';
       var PlaceReturnmarker = new google.maps.Marker({
         map: resultsMap,
         position: results[0].geometry.location,
@@ -398,7 +417,7 @@ function geocodeAddress(geocoder, resultsMap , housephoto , dataobject , houseph
       });
 
       PlaceReturnmarker.addListener('click', function() {
-        loadflickrapifloorplan( PlaceReturnmarker.MarkerPlaceName , "Brisbane,Rent,House,FloorPlan");
+        
         map.setCenter( PlaceReturnmarker.position );
         map.setZoom( 17 );
 
@@ -410,20 +429,21 @@ function geocodeAddress(geocoder, resultsMap , housephoto , dataobject , houseph
         SearchNearByPlace ( PlaceReturnmarker.position , "university" );
         SearchNearByPlace ( PlaceReturnmarker.position , "shopping_mall" );
 
-        window.setTimeout(function() {
-          infocontent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
+        // window.setTimeout(function() {
+          RentPlaceInfoContent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
             + PlaceReturnmarker.HouseAddress + "</b><br>" 
             + PlaceReturnmarker.HouseDesc;
-          PlaceReturnmarker.HouseFloorPlanPhotos = HousesOtherPhotos;
-            if (checkdata(PlaceReturnmarker.HouseFloorPlanPhotos)){
-              infocontent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
-              + PlaceReturnmarker.HouseAddress + "<br>" 
-              + PlaceReturnmarker.HouseFloorPlanPhotos + "</b><br>" 
-              + PlaceReturnmarker.HouseDesc ;
-            }
-        RentPlaceinfowindow.setContent( infocontent );
+          // PlaceReturnmarker.HouseFloorPlanPhotos = HousesOtherPhotos;
+            // if (checkdata(PlaceReturnmarker.HouseFloorPlanPhotos)){
+            //   RentPlaceInfoContent = PlaceReturnmarker.HouseMainPhoto + "<br><b>"
+            //   + PlaceReturnmarker.HouseAddress + "<br>" 
+            //   + PlaceReturnmarker.HouseFloorPlanPhotos + "</b><br>" 
+            //   + PlaceReturnmarker.HouseDesc ;
+            // }
+        RentPlaceinfowindow.setContent( RentPlaceInfoContent );
+        loadflickrapifloorplan( PlaceReturnmarker.MarkerPlaceName , "Rent,House,FloorPlan");
         RentPlaceinfowindow.open(map, PlaceReturnmarker);
-        }, 500 );
+        // }, 500 );
       });
     } 
   });
@@ -432,7 +452,7 @@ function geocodeAddress(geocoder, resultsMap , housephoto , dataobject , houseph
 // Event Lisener For The Result Plan
 // While Click On the photo On THis To Call This Function
 function ResultPanalClick(Resultsindex){
-  loadflickrapifloorplan( FlickrMarkerArray[Resultsindex].MarkerPlaceName , "Brisbane,Rent,House,FloorPlan");
+  
   map.setCenter(FlickrMarkerArray[Resultsindex].position);
   map.setZoom(17);
   
@@ -444,23 +464,12 @@ function ResultPanalClick(Resultsindex){
   SearchNearByPlace ( FlickrMarkerArray[Resultsindex].position , "university" );
   SearchNearByPlace ( FlickrMarkerArray[Resultsindex].position , "shopping_mall" );
   
-  window.setTimeout(function() {
-    infocontent = FlickrMarkerArray[Resultsindex].HouseMainPhoto + "<br><b>"
-    + FlickrMarkerArray[Resultsindex].HouseAddress + "</b><br>" 
-    + FlickrMarkerArray[Resultsindex].HouseDesc  ;
-
-    FlickrMarkerArray[Resultsindex].HouseFloorPlanPhotos = HousesOtherPhotos;
-    
-    if (checkdata(FlickrMarkerArray[Resultsindex].HouseFloorPlanPhotos)){
-      infocontent = FlickrMarkerArray[Resultsindex].HouseMainPhoto + "<br><b>"
-      + FlickrMarkerArray[Resultsindex].HouseAddress + "<br>" 
-      + FlickrMarkerArray[Resultsindex].HouseFloorPlanPhotos + "</b><br>" 
-      + FlickrMarkerArray[Resultsindex].HouseDesc ;
-    }
-    RentPlaceinfowindow.setContent( infocontent );
-    RentPlaceinfowindow.open(map, FlickrMarkerArray[Resultsindex]);
-  } , 500 );
-
+  RentPlaceInfoContent = FlickrMarkerArray[Resultsindex].HouseMainPhoto + "<br><b>"
+  + FlickrMarkerArray[Resultsindex].HouseAddress + "</b><br>" 
+  + FlickrMarkerArray[Resultsindex].HouseDesc  ;
+  RentPlaceinfowindow.setContent( RentPlaceInfoContent );
+  loadflickrapifloorplan( FlickrMarkerArray[Resultsindex].MarkerPlaceName , "Rent,House,FloorPlan");
+  RentPlaceinfowindow.open(map, FlickrMarkerArray[Resultsindex]);
 }  
 
 // Function Handling Error
