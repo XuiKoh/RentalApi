@@ -36,7 +36,7 @@ function loadflickrcallback(rsp) {
   FlickrData = rsp;
   for (i = 0 ; i < rsp.photos.photo.length ; i++) {
     photo = rsp.photos.photo[i];
-    ptitle = photo.title
+    ptitle = photo.title;
     thumbnail = "http://farm" + photo.farm + ".static.flickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret + "_m.jpg";
     picture = "http://www.flickr.com/photos/" + photo.owner + "/" + photo.id;
     url = '<a href="' + picture + '"><img alt="' + photo.title + '" src="' + thumbnail + '"/></a>';
@@ -57,11 +57,13 @@ function loadflickrcallback(rsp) {
 function LoadFlickFloorPlanCallBack(rsp) {
   HousesOtherPhotos = "";
   FlickrData = rsp;
-  if (rsp.photos.photo.length > 5)
-    j = 5;
-  else 
+  if (rsp.photos.photo.length > 5){
+    j = 6;
+  }
+  else {
     j = rsp.photos.photo.length;
-  for (i = 0 ; i <= j ; i++) {
+  }
+  for (i = 0 ; i < j ; i++) {
     photo = rsp.photos.photo[i];
     ptitle = photo.title;
     thumbnail = "http://farm" + photo.farm + ".static.flickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret + "_m.jpg";
