@@ -245,8 +245,8 @@ function initMap() {
         icon: icon,
         title: place.name,
         position: place.geometry.location,
-        placelat: place.geometry.location.G,
-        placelng: place.geometry.location.K
+        placelat: place.geometry.location.lat(),
+        placelng: place.geometry.location.lng()
       });
 
 
@@ -308,8 +308,8 @@ function createMarker(place) {
   var NearbyPlacemarker = new google.maps.Marker({
     map: map,
     position: place.geometry.location,
-    placelat: place.geometry.location.G,
-    placelng: place.geometry.location.K,
+    placelat: place.geometry.location.lat(),
+    placelng: place.geometry.location.lng(),
     icon: image
   });
 

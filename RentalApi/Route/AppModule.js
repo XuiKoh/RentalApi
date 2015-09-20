@@ -23,13 +23,14 @@ module.exports = {
 	FourSquareApi: function (req,res){
 		addresskeyword = req.params.foursquareparameter;
 		addressKeywordArray = addresskeyword.split(',');
+
 		keyword = addressKeywordArray[0];
 		latitude = addressKeywordArray[1];
 		longitude = addressKeywordArray[2];
 		var url = "https://api.foursquare.com/v2/venues/search"
 		+"?client_id=52KOEIWDJ4YOKCHNNJT54B2YATEYFOPUTT40LTAJUHUNQ0FE"
 		+"&client_secret=XFVWU1Q4ST2SLDHGWDMSFXUBWR4O0VW2AQHI4A0TUZHEAJL2"
-		+"&v=20130815"
+		+"&v=20150920"
 		+"&ll=" + latitude + "," + longitude
 		+"&query=" + keyword;
 
@@ -47,7 +48,7 @@ module.exports = {
 		+ idkeyword
 		+"?client_id=52KOEIWDJ4YOKCHNNJT54B2YATEYFOPUTT40LTAJUHUNQ0FE"
 		+"&client_secret=XFVWU1Q4ST2SLDHGWDMSFXUBWR4O0VW2AQHI4A0TUZHEAJL2"
-		+"&v=20130815"
+		+"&v=20150920"
    		request(url, function(error, response, body) {
 			if (!error && response.statusCode == 200) {
 				var info = JSON.parse(body);
