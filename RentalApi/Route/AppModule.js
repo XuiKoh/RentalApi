@@ -5,13 +5,14 @@ module.exports = {
 		flickrKeyword = req.params.parameterflickrtags;
 		flickrKeywordArray = flickrKeyword.split(',,');
 		tags = flickrKeywordArray[0];
+		page = flickrKeywordArray[2];
 		if(flickrKeywordArray[1] == null)
 			keyword = "";
 		else
 			keyword = flickrKeywordArray[1];
 		var url = 'https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=5eded44188320998948b9966f4d49e50&text='+ keyword 
 		+'&tags='+ tags 
-		+'&tag_mode=all&accuracy=1&extras=description&per_page=5000&format=json&nojsoncallback=1';
+		+'&tag_mode=all&accuracy=1&extras=description&per_page=500&page='+ page +'&format=json&nojsoncallback=1';
 		request(url, function(error, response, body) {
 			if (!error && response.statusCode == 200) {
 				var info = JSON.parse(body);
