@@ -6,6 +6,7 @@ module.exports = {
 		flickrKeywordArray = flickrKeyword.split(',,');
 		tags = flickrKeywordArray[0];
 		page = flickrKeywordArray[2];
+		JsonArray = [];
 		if(flickrKeywordArray[1] == null)
 			keyword = "";
 		else
@@ -15,11 +16,43 @@ module.exports = {
 		+'&tag_mode=all&accuracy=1&extras=description&per_page=500&page='+ page +'&format=json&nojsoncallback=1';
 		request(url, function(error, response, body) {
 			if (!error && response.statusCode == 200) {
+
+				var data = ({photos:{
+									photo:[]
+									},
+							pages:0});
+
 				var info = JSON.parse(body);
-				res.send(info);
+				data.photos.pages = info.photos.pages;
+
+				for ( var spage =1 ; spage <= info.photos.pages ; spage ++ ){
+					var surl = 'https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=5eded44188320998948b9966f4d49e50&text='+ keyword 
+					+'&tags='+ tags 
+					+'&tag_mode=all&accuracy=1&extras=description&per_page=500&page='+ spage +'&format=json&nojsoncallback=1';
+					request(surl, function(error, response, body) {
+						var info = JSON.parse(body);
+						console.log(info.photos.page);
+						var addrssPat = /\d+\s+\w+\s+(?:st(?:\.|reet)?|ave(?:\.|nue)?|lane|dr(?:\.|ive)?)/i;
+							for ( var i = 0 ; i < info.photos.photo.length; i ++ ){
+								if (addrssPat.test(info.photos.photo[i].title)){
+									JsonArray.push(info.photos.photo[i]);
+								}		
+
+							}
+							//data.photos.photo = JsonArray;
+						console.log(JsonArray);
+					});
+					data.photos.photo = JsonArray;
+				}
+				
+				res.send(data);
+			
+				
 			}
 		});
 	},
+
+
 
 	FourSquareApi: function (req,res){
 		addresskeyword = req.params.foursquareparameter;

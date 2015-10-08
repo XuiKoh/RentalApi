@@ -7,7 +7,10 @@ function loadlocalhostFlickrAPIScript(tags){
   xmlhttp.onreadystatechange = function() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       flicktest = JSON.parse(xmlhttp.responseText)
-      loadflickrcallbackpage(flicktest , tags);
+      if (flicktest.photos.photo.length>0){
+        loadflickrcallback(flicktest);
+      }
+      // loadflickrcallbackpage(flicktest , tags);
     }
   }
   xmlhttp.open("GET", url, true);
@@ -44,14 +47,14 @@ function loadflickrapifloorplan(keyword , tags) {
   xmlhttp.send();
 }
 pagestimes=1;
-function loadflickrcallbackpage(rsp , tags ) {
-  FlickrPagesData = rsp;
-  FlickrMaxpages = FlickrPagesData.photos.pages;
-  for (FlickrPage = 1 ; FlickrPage <= FlickrMaxpages ; FlickrPage++){
-    FlickrApiWithPages(tags, FlickrPage);
-    pagestimes++;
-  }
-}
+// function loadflickrcallbackpage(rsp , tags ) {
+//   FlickrPagesData = rsp;
+//   FlickrMaxpages = FlickrPagesData.photos.pages;
+//   for (FlickrPage = 1 ; FlickrPage <= FlickrMaxpages ; FlickrPage++){
+//     FlickrApiWithPages(tags, FlickrPage);
+//     pagestimes++;
+//   }
+// }
 times = 1;
 // Predefine Flickr Call Back Function.
 function loadflickrcallback(rsp) {
@@ -508,14 +511,14 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 
 // Load The Flickr API When Page Finish load
 $(window).load(function() {
-  loadlocalhostFlickrAPIScript("House,Rent,Brisbane");
-  loadlocalhostFlickrAPIScript("House,Rent,Floorplan");
+  //loadlocalhostFlickrAPIScript("House,Rent,Brisbane");
+  //loadlocalhostFlickrAPIScript("House,Rent,Floorplan");
   loadlocalhostFlickrAPIScript("House,Rent");
-  loadlocalhostFlickrAPIScript("House");
-  loadlocalhostFlickrAPIScript("Rent");
-  loadlocalhostFlickrAPIScript("Indoor");
-  loadlocalhostFlickrAPIScript("Outdoor");
-  loadlocalhostFlickrAPIScript("Dog");
-  // loadlocalhostFlickrAPIScript("House,Rent");
+  // loadlocalhostFlickrAPIScript("House");
+  //loadlocalhostFlickrAPIScript("Rent");
+  // loadlocalhostFlickrAPIScript("Indoor");
+  // loadlocalhostFlickrAPIScript("Outdoor");
+  // loadlocalhostFlickrAPIScript("Dog");
+  // // loadlocalhostFlickrAPIScript("House,Rent");
 });
 
