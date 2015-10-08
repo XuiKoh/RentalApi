@@ -1,5 +1,6 @@
 var express = require('express');
 var Flickr = require('./Route/AppModule');
+var async = require('async');
 var app = express();
 
 // Set Folder AS Root Folder
@@ -17,6 +18,6 @@ app.get('/Flickr/:parameterflickrtags', Flickr.FlickrApi);
 app.get('/Foursquare/:foursquareparameter',Flickr.FourSquareApi);
 app.get('/FoursquareID/:foursquareidparameter',Flickr.FourSquareApiByID);
 
-app.listen(80);
+app.listen(8124);
 
 console.log('Listening on port 80');

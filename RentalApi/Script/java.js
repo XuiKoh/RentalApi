@@ -6,7 +6,7 @@ function loadlocalhostFlickrAPIScript(tags){
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-      flicktest = JSON.parse(xmlhttp.responseText)
+      flicktest = JSON.parse(xmlhttp.responseText);
       loadflickrcallbackpage(flicktest , tags);
     }
   }
@@ -72,7 +72,7 @@ function loadflickrcallback(rsp) {
     geocodeAddress(geocoder, map , specifyPhoto , photo , thumbnail );
     times ++;
   }
-  document.writeln(HousesOtherPhotos);
+  //document.writeln(HousesOtherPhotos);
 }
 
 function LoadFlickFloorPlanCallBack(rsp) {
@@ -508,14 +508,14 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 
 // Load The Flickr API When Page Finish load
 $(window).load(function() {
-  loadlocalhostFlickrAPIScript("House,Rent,Brisbane");
-  loadlocalhostFlickrAPIScript("House,Rent,Floorplan");
+  //loadlocalhostFlickrAPIScript("House,Rent,Brisbane");
+ // loadlocalhostFlickrAPIScript("House,Rent,Floorplan");
   loadlocalhostFlickrAPIScript("House,Rent");
-  loadlocalhostFlickrAPIScript("House");
-  loadlocalhostFlickrAPIScript("Rent");
-  loadlocalhostFlickrAPIScript("Indoor");
-  loadlocalhostFlickrAPIScript("Outdoor");
-  loadlocalhostFlickrAPIScript("Dog");
+  //loadlocalhostFlickrAPIScript("House");
+  //loadlocalhostFlickrAPIScript("Rent");
+ // loadlocalhostFlickrAPIScript("Indoor");
+ // loadlocalhostFlickrAPIScript("Outdoor");
+ // loadlocalhostFlickrAPIScript("Dog");
   // loadlocalhostFlickrAPIScript("House,Rent");
 });
 
