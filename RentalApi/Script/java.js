@@ -1,8 +1,24 @@
 // Load Flicker Api WIth Specify Keyword And Tag
-function loadlocalhostFlickrAPIScript(){
+function loadlocalhostFlickrAPIScript(tags){
   keyword = "";
-  tags = "House,Rent,Brisbane";
+  //tags = "House,Rent,Brisbane";
   url = "/Flickr/" + tags ;
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      flicktest = JSON.parse(xmlhttp.responseText)
+      loadflickrcallbackpage(flicktest , tags);
+    }
+  }
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send();
+}
+
+// Load Flicker Api WIth Specify Keyword And Tag
+function FlickrApiWithPages(tags , page ){
+  keyword = "";
+  //tags = "House,Rent,Brisbane";
+  url = "/Flickr/" + tags + ",,,," + page ;
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -27,9 +43,16 @@ function loadflickrapifloorplan(keyword , tags) {
   xmlhttp.open("GET", url, true);
   xmlhttp.send();
 }
-
-
-first = 1;
+pagestimes=1;
+function loadflickrcallbackpage(rsp , tags ) {
+  FlickrPagesData = rsp;
+  FlickrMaxpages = FlickrPagesData.photos.pages;
+  for (FlickrPage = 1 ; FlickrPage <= FlickrMaxpages ; FlickrPage++){
+    FlickrApiWithPages(tags, FlickrPage);
+    pagestimes++;
+  }
+}
+times = 1;
 // Predefine Flickr Call Back Function.
 function loadflickrcallback(rsp) {
   HousesOtherPhotos = "";
@@ -44,14 +67,12 @@ function loadflickrcallback(rsp) {
     specifyPhoto = url ;
     HousesOtherPhotos += url;
     HouseDecp = photo.description._content;
-
     //Run the house Searcher Function on for 1 times.
-    if(first == 1){
-      HousesOtherPhotos = "" ;
-      geocodeAddress(geocoder, map , specifyPhoto , photo , thumbnail );
-    }
+    // HousesOtherPhotos = "" ;
+    geocodeAddress(geocoder, map , specifyPhoto , photo , thumbnail );
+    times ++;
   }
-  first = 0;
+  document.writeln(HousesOtherPhotos);
 }
 
 function LoadFlickFloorPlanCallBack(rsp) {
@@ -393,9 +414,11 @@ function geocodeLatLng(geocoder, map, infowindow) {
 // @param flicker with all flicker data
 // Function process Flicker Result 
 // Used photo title and search for the House address 
-function geocodeAddress(geocoder, resultsMap , housephoto , dataobject , housephotoThumbnail ) {
-  FlickrMarkerArray = [];
+ FlickrMarkerArray = [];
+
   HouseIndex = 0;
+function geocodeAddress(geocoder, resultsMap , housephoto , dataobject , housephotoThumbnail ) {
+ 
   var address = searchingtitle;
   var placesList = document.getElementById('places');
   geocoder.geocode({'address': address}, function(results, status) {
@@ -485,5 +508,14 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 
 // Load The Flickr API When Page Finish load
 $(window).load(function() {
-  loadlocalhostFlickrAPIScript();
+  loadlocalhostFlickrAPIScript("House,Rent,Brisbane");
+  loadlocalhostFlickrAPIScript("House,Rent,Floorplan");
+  loadlocalhostFlickrAPIScript("House,Rent");
+  loadlocalhostFlickrAPIScript("House");
+  loadlocalhostFlickrAPIScript("Rent");
+  loadlocalhostFlickrAPIScript("Indoor");
+  loadlocalhostFlickrAPIScript("Outdoor");
+  loadlocalhostFlickrAPIScript("Dog");
+  // loadlocalhostFlickrAPIScript("House,Rent");
 });
+
