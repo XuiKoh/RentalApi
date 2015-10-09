@@ -31,9 +31,10 @@ module.exports = {
 				+'&tags='+ tags 
 				+'&tag_mode=all&accuracy=1&extras=description&per_page=500&page='+ spage +'&format=json&nojsoncallback=1';
 				request(surl, function(error, response, sbody) {
-					var info = JSON.parse(sbody);
+					
 					
 					try{
+						var info = JSON.parse(sbody);
 						console.log("LoadPage: "+info.photos.page + "/" +info.photos.pages);
 						var addrssPat = /\d+\s+\w+\s+(?:st(?:\.|reet)?|ave(?:\.|nue)?|lane|dr(?:\.|ive)?)/i;
 						// for ( var i = 0 ; i < info.photos.photo.length; i ++ ){
