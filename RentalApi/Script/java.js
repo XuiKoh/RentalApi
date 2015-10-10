@@ -511,10 +511,10 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 
 // Load The Flickr API When Page Finish load
 $(window).load(function() {
-  //loadlocalhostFlickrAPIScript("House,Rent,Brisbane");
-  //loadlocalhostFlickrAPIScript("House,Rent,Floorplan");
-  //loadlocalhostFlickrAPIScript("House,Rent");
-  loadlocalhostFlickrAPIScript("House");
+  loadlocalhostFlickrAPIScript("House,Rent,Brisbane");
+  loadlocalhostFlickrAPIScript("House,Rent,Floorplan");
+  loadlocalhostFlickrAPIScript("House,Rent");
+  // loadlocalhostFlickrAPIScript("House");
   //loadlocalhostFlickrAPIScript("Rent");
   // loadlocalhostFlickrAPIScript("Indoor");
   // loadlocalhostFlickrAPIScript("Outdoor");

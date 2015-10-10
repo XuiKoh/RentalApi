@@ -7,6 +7,7 @@ module.exports = {
 		tags = flickrKeywordArray[0];
 		page = flickrKeywordArray[2];
 		JsonArray = [];
+		pagetimescount=1;
 		if(flickrKeywordArray[1] == null)
 			keyword = "";
 		else
@@ -19,44 +20,56 @@ module.exports = {
 				data = ({photos:{
 									photo:[]
 									},
-							pages:0});
+							stat:"ok"});
 				var info = JSON.parse(body);
-				load2ndRequest(info.photos.pages);
+				maximumPages= info.photos.pages;
+				load2ndRequest(maximumPages);
 			}
 			//res.send(data);
 		});
 		function load2ndRequest(PagesResult){
-			for ( var spage =0 ; spage < PagesResult ; spage ++ ){
+			for ( var spage =1 ; spage <= PagesResult ; spage ++ ){
 				var surl = 'https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=5eded44188320998948b9966f4d49e50&text='+ keyword 
 				+'&tags='+ tags 
 				+'&tag_mode=all&accuracy=1&extras=description&per_page=500&page='+ spage +'&format=json&nojsoncallback=1';
 				request(surl, function(error, response, sbody) {
 					
+					if (!error && response.statusCode == 200) {
 					
-					try{
-						var info = JSON.parse(sbody);
-						console.log("LoadPage: "+info.photos.page + "/" +info.photos.pages);
-						var addrssPat = /\d+\s+\w+\s+(?:st(?:\.|reet)?|ave(?:\.|nue)?|lane|dr(?:\.|ive)?)/i;
-						// for ( var i = 0 ; i < info.photos.photo.length; i ++ ){
-						// 	if (addrssPat.test(info.photos.photo[i].title)){
-						// 		JsonArray.push(info.photos.photo[i]);
-						// 	}		
-						// }
-						// data.photos.photo = JsonArray;
-						// console.log("1) JsonArray Length " + JsonArray.length);
-					}catch(e){
-						console.log("2nd RequestError Messages :"+e);
-						// console.log("Loading Page: " + pinfo.photos.page +"/"+pinfo.photos.pages);
+						try{
+							var info = JSON.parse(sbody);
+							console.log("LoadPage: "+info.photos.page + "/" +info.photos.pages);
+							var addrssPat = /\d+\s+\w+\s+(?:st(?:\.|reet)?|ave(?:\.|nue)?|lane|dr(?:\.|ive)?)/i;
+							for ( var i = 0 ; i < info.photos.photo.length; i ++ ){
+								if (addrssPat.test(info.photos.photo[i].title)){
+									JsonArray.push(info.photos.photo[i]);
+								}		
+							}
+							//data.photos.photo = JsonArray;
+							console.log("1) JsonArray Length " + JsonArray.length);
+						}catch(e){
+							console.log("2nd RequestError Messages :"+e);
+							// console.log("Loading Page: " + pinfo.photos.page +"/"+pinfo.photos.pages);
+						}
+						console.log("2) JsonArray Length " + JsonArray.length);
+						data = info;
+						//console.log(data);
+						SetFinalResult();
 					}
-					console.log("2) JsonArray Length " + JsonArray.length);
-					console.log("Loading Page: " + spage +"/"+PagesResult);
-					
 				});
 				console.log("Forloop " + spage + "/"+ PagesResult);
 				
 			}
-			data.photos.photo = JsonArray;
-			res.send(data);
+		}
+		function SetFinalResult(){
+			if (pagetimescount == maximumPages){
+				
+				console.log("Send "+ JsonArray.length );
+				data.photos.photo = JsonArray;
+				res.send(data);
+			}
+			console.log(pagetimescount++ +"/"+ maximumPages);
+			
 		}
 	},
 
