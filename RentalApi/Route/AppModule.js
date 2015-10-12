@@ -27,39 +27,65 @@ module.exports = {
 				request(url, function (error, response, body) {
 					if (!error && response.statusCode == 200) {
 						var info = JSON.parse(body);
-						var jsonArray = [];
+						
 						data.photos.pages = info.photos.pages;
-						for(var i = 0; i < info.photos.photo.length; i++){
-							if(regEx.test(info.photos.photo[i].title)){
-								data.photos.photo.push(info.photos.photo[i]);
-							}
-						}
+						// for(var i = 0; i < info.photos.photo.length; i++){
+						// 	if(regEx.test(info.photos.photo[i].title)){
+						// 		data.photos.photo.push(info.photos.photo[i]);
+						// 	}
+						// }
 					}
 					callback(error, info.photos.pages);
 				});
 			});
 			async.parallel(calls, function( err, result){
 				var requests = [];
-				for(page; page<=result; page++){
-					var purl = 'https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=5eded44188320998948b9966f4d49e50&text=' + keyword + '&tags=' + tags + '&tag_mode=all&accuracy=1&extras=description&per_page=500&page=' + page + '&format=json&nojsoncallback=1';
+				var jsonArray = [];
+				fpage=1;
+				for(page=1; page<=result; page++){
+					
 					requests.push(function(callback){
-						request(purl, function (error, response, body) {
-							if (!error && response.statusCode == 200) {
-								var info = JSON.parse(body);
-								var jsonArray = [];
-								data.photos.pages = info.photos.pages;
-								for(var i = 0; i < info.photos.photo.length; i++){
-									if(regEx.test(info.photos.photo[i].title)){
-										data.photos.photo.push(info.photos.photo[i]);
+						var pageloaded=1;
+						
+						// for(page=1; page<=result; page++){
+							console.log(fpage + "//" + result);
+							purl = 'https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=5eded44188320998948b9966f4d49e50&text=' + keyword + '&tags=' + tags + '&tag_mode=all&accuracy=1&extras=description&per_page=500&page=' + fpage + '&format=json&nojsoncallback=1';
+							//console.log(purl);
+							request(purl, function (error, response, body) {
+
+								if (!error && response.statusCode == 200) {
+									var info = JSON.parse(body);
+									console.log("Loading page: " + info.photos.page);
+									data.photos.pages = info.photos.pages;
+									for(var i = 0; i < info.photos.photo.length; i++){
+										if(regEx.test(info.photos.photo[i].title)){
+											jsonArray.push(info.photos.photo[i]);
+											console.log("Valid :" + jsonArray.length);
+										}
 									}
 								}
-							}
-							callback(error, jsonArray);
-						});
+								// if (pageloaded == result) {
+								// 	pageloaded=1;
+									
+								// };
+								//console.log(pageloaded + "/" + result );
+								pageloaded++;
+								callback(error, jsonArray);
+							});
+
+							fpage++;
+
+						// }
+						
 					});
 				}
+				console.log("Total JsonData"+jsonArray.length);
+					
 				async.parallel(requests, function( err, result){
+					console.log("Final");
+					data.photos.photo = jsonArray;
 					res.send(data);
+					jsonArray = [];
 				});
 			});
 			page++;
